@@ -39,7 +39,7 @@ App = {
 
 
     web3.eth.getBalance(App.address, (err, balance) => {
-      console.log(balance);
+      
       ether = parseInt(web3.utils.fromWei(balance, "wei")) / 1000000000000000000;
       Init.OSDCTokenInstance.balanceOf.call(App.address, {from:App.address}).then(function(result) {
         token = result.toNumber();
@@ -55,14 +55,14 @@ App = {
 
   sendEther: function(){
     var toAddress = $('#etherAddressTxt').val();
-    var etherValue = $('#etherValue1').val();
+    var etherValue = $('#etherValue1').val().toString();
 
     if(App.address == ''){
-      alert('Please select Address');
+      alert('Please select address');
       $('#selectAccount').focus();
       return;
     }else if(toAddress == ''){
-      alert('Please input Address');
+      alert('Please input address');
       $('#etherAddressTxt').focus();
       return;
     }else if(etherValue == ''){
@@ -71,10 +71,8 @@ App = {
       return;
     }
 
-    
-    ether = parseInt(web3.utils.toWei(etherValue, "ether"));
-    
-    web3.eth.sendTransaction({ from: App.address, to: toAddress, value: ether },
+    const tokenPrice = new web3.utils.BN('1000000000000000000').mul(new web3.utils.BN(etherValue));
+    web3.eth.sendTransaction({ from: App.address, to: toAddress, value: tokenPrice },
     function (e, r) {
       
       if(e){
@@ -108,15 +106,15 @@ App = {
     var tokenValue = $('#tokenValue1').val();
 
     if(App.address == ''){
-      alert('Please select Address');
+      alert('Please select address');
       $('#selectAccount').focus();
       return;
     }else if(toAddress == ''){
-      alert('Please input Address');
+      alert('Please input address');
       $('#tokenAddressTxt').focus();
       return;
     }else if(tokenValue == ''){
-      alert('Please input Token value');
+      alert('Please input token value');
       $('#tokenValue1').focus();
       return;
     }
